@@ -4,4 +4,4 @@
 # Run Streamlit app
 > streamlit run dashboard.py
 # Dashboard URL
-Dashboard
+Dashboard https://2cfxjmappdxxjuwqzxebpg7.streamlit.app/
