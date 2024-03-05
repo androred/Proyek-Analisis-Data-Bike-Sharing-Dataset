@@ -5,19 +5,30 @@ import streamlit as st
 from babel.numbers import format_currency
 sns.set(style='dark')
 
-# Average Daily Bike Rentals
-average_daily_rentals = all_df['cnt'].mean()
-st.subheader("Average Daily Bike Rentals")
-st.write(f"The average daily bike rentals is approximately {average_daily_rentals:.2f} bikes.")
+def create_season_df(day_df):
+    season_df = day_df.groupby(["season"])["cnt"].sum().reset_index()
+    return season_df
 
-# Find the Season with the Most Bike Rentals
-most_rented_season = season_df.groupby('season')['cnt'].sum().idxmax()
-season_label = ["Spring", "Summer", "Fall", "Winter"]
-st.subheader("Season with the Most Bike Rentals")
-st.write(f"The season with the most bike rentals is {season_label[most_rented_season-1]}.")
+def create_dayly_df(day_df):
+    dayly_df = day_df.groupby(["dteday"])["cnt"].sum().reset_index()
+    return dayly_df 
+    
+data_df = pd.read_csv("https://raw.githubusercontent.com/androred/Proyek-Analisis-Data-Bike-Sharing-Dataset/main/Data/day.csv")
 
-# Visualization Bike Renters by Season in 2012
-st.subheader("Number of Bike Renters by Season in 2012")
+season_df = create_season_df(data_df)
+dayly_df = create_dayly_df(data_df)
+
+
+#create header
+st.header("** Dashboard Bike Rent** ")
+
+# Create Sidebar
+with st.sidebar:
+    st.sidebar.header("About")
+    st.sidebar.write("This dashboard was created to answer business questions about the number of bike rentals per day and the season that has the most bike rentals. The data is taken from the Bike Sharing Dataset. The dataset contains 731 rows and 16 columns. The columns include the date, season, year, month, holiday, weekday, workingday, weather, temperature, humidity, windspeed, and the number of bike rented. The dataset is taken from the UCI Machine Learning Repository.")
+    st.sidebar.caption("Created by: Akhbarrr")
+
+st.subheader("Number of Bike Renters by Season")
 fig, ax = plt.subplots(figsize=(15, 10))
 data_2012 = season_df[season_df["yr"]==1] 
 ax = sns.barplot(
@@ -36,6 +47,6 @@ ax.set_title("Bike Rented by Season in 2012", loc="center", fontsize=15)
 ax.set_ylabel("Bike Rented")
 ax.set_xlabel("Season")
 ax.tick_params(axis="x", labelsize=10)
-for p in ax.patches:
-    ax.annotate(f'{p.get_height():.0f}', (p.get_x() + p.get_width() / 2., p.get_height()), ha='center', va='center', xytext=(0, 10), textcoords='offset points')
+for x in ax.patches:
+    ax.annotate(f'{x.get_height():.0f}', (x.get_x() + x.get_width() / 2., x.get_height()), ha='center', va='center', xytext=(0, 10), textcoords='offset points')
 st.pyplot(fig)
