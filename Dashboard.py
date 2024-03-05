@@ -20,7 +20,7 @@ dayly_df = create_dayly_df(data_df)
 
 
 #create header
-st.header("** Dashboard Bike Rent** ")
+st.header("Dashboard Bike Rent")
 
 # Create Sidebar
 with st.sidebar:
@@ -28,45 +28,41 @@ with st.sidebar:
     st.sidebar.write("This dashboard was created to answer business questions about the number of bike rentals per day and the season that has the most bike rentals. The data is taken from the Bike Sharing Dataset. The dataset contains 731 rows and 16 columns. The columns include the date, season, year, month, holiday, weekday, workingday, weather, temperature, humidity, windspeed, and the number of bike rented. The dataset is taken from the UCI Machine Learning Repository.")
     st.sidebar.caption("Created by: Akhbarrr")
 
-st.subheader("Number of Bike Renters by Day")
+st.subheader("Number of Bike Renters by Day") 
 fig, ax = plt.subplots(figsize=(15, 10))
-data = dayly_df[dayly_df["dteday"]==1] 
 sns.barplot(
-    y="cnt", 
-    x="mnth",
-    hue="mnth",
-    data=data,
+    y="cnt",
+    x="dteday",
+    hue="dteday",
+    data=dayly_df,
     palette="viridis",
-    dodge=False,  
-    legend=False,
+    dodge=False,
     ax=ax
 )
-date_label = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"]
+date_label = ["7", "14", "21", "28",  "31"]
 ax.set_title("Bike Rented by Day", loc="center", fontsize=15)
 ax.set_ylabel("Bike Rented")
-ax.set_xlabel("Month")
+ax.set_xlabel("Day")
 ax.tick_params(axis="x", labelsize=10)
-for index, value in enumerate(data["cnt"]):
+for index, value in enumerate(dayly_df["cnt"]):
     plt.text(index, value + 10, str(value), ha='center', va='bottom', fontsize=10)
 st.pyplot(fig)
 
 
 st.subheader("Number of Bike Renters by Season")
 fig, ax = plt.subplots(figsize=(15, 10))
-data = season_df[season_df==1] 
-ax = sns.barplot(
-    y="cnt", 
+sns.barplot(
+    y="cnt",
     x="season",
-    hue="season",
-    data=data_2012,
+    hue=["Spring", "Summer", "Fall", "Winter"],
+    data=season_df,
     palette="viridis",
-    dodge=False,  
-    legend=False,
+    dodge=False,
     ax=ax
 )
 season_label = ["Spring", "Summer", "Fall", "Winter"]
 ax.set_xticks(range(len(season_label)), labels=season_label)
-ax.set_title("Bike Rented by Season in 2012", loc="center", fontsize=15)
+ax.set_title("Bike Rented by Season", loc="center", fontsize=15)
 ax.set_ylabel("Bike Rented")
 ax.set_xlabel("Season")
 ax.tick_params(axis="x", labelsize=10)
