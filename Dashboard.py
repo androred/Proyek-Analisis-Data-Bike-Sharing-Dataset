@@ -1,3 +1,10 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import streamlit as st
+from babel.numbers import format_currency
+sns.set(style='dark')
+
 # Average Daily Bike Rentals
 average_daily_rentals = all_df['cnt'].mean()
 st.subheader("Average Daily Bike Rentals")
