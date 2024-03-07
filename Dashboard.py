@@ -60,14 +60,13 @@ ax.set_xlabel("Day")
 ax.tick_params(axis="x", labelsize=10)
 st.pyplot(fig)
 
-st.subheader("Correlation Heatmap of Bike Sharing Dataset")
-fig, ax = plt.subplots(figsize=(15, 10))
 
-columns_for_correlation = ['temp', 'atemp', 'hum', 'windspeed', 'casual', 'registered', 'cnt']
-day_new = data_df[columns_for_correlation]
+st.subheader("Correlation Heatmap of Bike Sharing Dataset")
+day_new = data_df[['temp','atemp','hum','windspeed','casual', 'registered','cnt']]
 correlation_matrix = day_new.corr()
 plt.figure(figsize=(10, 8))
-sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=1)
+sns.heatmap(correlation_matrix, annot=True, cmap='Greens', linewidths=1)
+st.pyplot(plt)
 
 
 st.subheader("Number of Bike Renters by Season")
@@ -93,30 +92,34 @@ st.pyplot(fig)
 
 
 st.subheader("Analyzes the relationship between season and count of bike rental")
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 8))
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(36, 12))
 
-sns.barplot(
+plt.subplot(1, 2, 1)
+ax1 = sns.barplot(
     x='season', 
     y='cnt', 
-    hue=["Spring", "Summer", "Fall", "Winter"], 
-    data=season_df, 
-    palette='Paired', 
+    data=data_df, 
+    palette='viridis',
     ax=ax1)
-ax1.set_title("Relationship Between Season and Count")
+plt.title("Relationship Between Season and Count")
+ax1.bar_label(ax1.containers[0], fmt='%0.1f', label_type='center')
 for p in ax1.patches:
     ax1.annotate(f'{p.get_height():.0f}', (p.get_x() + p.get_width() / 2., p.get_height()), ha='center', va='center', xytext=(0, 10), textcoords='offset points')
 
-sns.barplot(
+
+plt.subplot(1, 2, 2)
+plt.title("Relationship Between Season and Count with Year Hue")
+ax2 = sns.barplot(
     x='season', 
     y='cnt', 
-    hue=["Spring", "Summer", "Fall", "Winter"], 
-    data=season_df, 
-    palette='Paired', 
+    hue='yr', 
+    data=data_df, 
+    palette='viridis',
     ax=ax2)
-ax2.set_title("Relationship Between Season and Count with Year Hue")
 for p in ax2.patches:
     ax2.annotate(f'{p.get_height():.0f}', (p.get_x() + p.get_width() / 2., p.get_height()), ha='center', va='center', xytext=(0, 10), textcoords='offset points')
+
 st.pyplot(fig)
 
 st.subheader("Conclusion")
-st.write("Rata-rata penyewaan terjadi setiap harinya diangka 4000 - 5000 penyewa. Penyewaan yang paling banyak terjadi dengan parameter musim yaitu pada musim Gugur atau musim 3")
+st.write("Rata-rata penyewaan terjadi setiap harinya diangka 4504 penyewa. Penyewaan yang paling banyak terjadi dengan parameter musim yaitu pada musim Gugur atau musim 3")
