@@ -5,6 +5,7 @@ Jalankan dengan:
 """
 
 from pathlib import Path
+import re
 
 import pandas as pd
 import plotly.express as px
@@ -42,18 +43,31 @@ WEATHER_ORDER = ["Cerah/Berawan", "Berkabut/Mendung", "Hujan/Salju Ringan"]
 st.markdown(
     f"""
     <style>
+        /* Warna dibuat eksplisit agar tetap terbaca pada tema terang maupun gelap. */
         [data-testid="stSidebar"] {{ background: #F1F5F9; }}
+        [data-testid="stSidebar"] * {{ color: #1E293B !important; }}
+        [data-testid="stSidebar"] input,
+        [data-testid="stSidebar"] textarea,
+        [data-testid="stSidebar"] [data-baseweb="select"] > div {{
+            color: #1E293B !important; background: #FFFFFF !important;
+        }}
         [data-testid="stMetric"] {{
             background: #FFFFFF; border: 1px solid #E2E8F0;
             border-radius: 12px; padding: 14px 16px;
             box-shadow: 0 2px 8px rgba(15, 23, 42, .05);
         }}
+        [data-testid="stMetric"] * {{ color: #0F172A !important; }}
+        [data-testid="stMetric"] [data-testid="stMetricLabel"] {{ color: #475569 !important; }}
+        [data-testid="stAlert"], [data-testid="stAlert"] * {{ color: #1E293B !important; }}
         .dashboard-subtitle {{ color: {SLATE}; margin-top: -12px; margin-bottom: 18px; }}
         .insight-box {{
             background: #F8FAFC; border: 1px solid #CBD5E1;
             border-left: 5px solid {ACCENT}; border-radius: 10px;
-            padding: 16px 20px; margin-top: 8px;
+            padding: 16px 20px; margin-top: 8px; color: #1E293B !important;
         }}
+        .insight-box * {{ color: #1E293B !important; }}
+        .insight-box strong {{ color: #0F172A !important; }}
+        .insight-box li {{ margin: 8px 0; line-height: 1.5; }}
     </style>
     """,
     unsafe_allow_html=True,
@@ -275,4 +289,8 @@ insights = [
     f"Rekor penyewaan terjadi pada **{format_date_id(record['dteday'])}**, yaitu sebanyak **{format_number(record['cnt'])} penyewaan**.",
     f"{growth_text} Rata-rata penyewaan tertinggi berdasarkan musim terdapat pada **{season_avg}**.",
 ]
-st.markdown('<div class="insight-box">' + "\n".join(f"- {item}" for item in insights) + "</div>", unsafe_allow_html=True)
+insight_items = []
+for item in insights:
+    item_html = re.sub(r"\*\*(.*?)\*\*", r"<strong>\1</strong>", item)
+    insight_items.append(f"<li>{item_html}</li>")
+st.markdown('<div class="insight-box"><ul>' + "".join(insight_items) + "</ul></div>", unsafe_allow_html=True)
